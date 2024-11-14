@@ -4,9 +4,9 @@ services:
       dockerfile: dockerfile-fastapi
     container_name: fastapi_app
     ports:
-      - "8000:8000"
+      - "${API_PORT}:${API_PORT}"
     depends_on:
-      - db
+      - postgres
     environment:
       - DATABASE_URL=${DATABASE_URL}
 
@@ -14,7 +14,7 @@ services:
     image: postgres:13
     container_name: postgres_db
     volumes:
-      - ./db/data:/var/lib/postgresql/data
+      - ./postgres/data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
