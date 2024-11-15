@@ -3,17 +3,19 @@ import os
 from typing import Annotated
 from fastapi import FastAPI, File, UploadFile
 from databases import Database
-
+from db import CREATE_TABLES_SQL
 
 # Initialize FastAPI and Database
 app = FastAPI()
 DATABASE_URL = os.getenv('DATABASE_URL')
 database = Database(DATABASE_URL)
 
-# Connect to the database on startup
+# Connect to the database on startup and create tables if don't exist yet
 @app.on_event("startup")
 async def startup():
     await database.connect()
+    for TABLE in CREATE_TABLES_SQL:
+        await database.execute(TABLE)
 
 # Disconnect from the database on shutdown
 @app.on_event("shutdown")
